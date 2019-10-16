@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+<script>
+  // 期待函数
+  function anticipation (param, server) {
+    console.log(param, server)
+  }
+
+  document.onclick = function () {
+    // 通过script标签的src属性实现跨域的HTTP请求
+    let vNode = document.createElement("script")
+    vNode.src = "http://localhost:8080?param=hahaha&cb=anticipation"
+
+    document.head.appendChild(vNode)
+  }
+
+</script>
+</html>
