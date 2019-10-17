@@ -15,9 +15,5 @@
   * heap.js             堆排序
   * merge.js           归并(二路)排序
 * originated-websocket-connection    原生node实现Websocket连接(只有连接阶段)
-  * client.html    	客户端
-  * server.js            服务器
-
 * jsonp    jsonp实现跨域的简单原理实现
-  * client.html         客户端
-  * server.js             服务器
+* dynamic-data     模拟vue动态数据双向绑定 

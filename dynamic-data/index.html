@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <p>姓名：{{name}}</p>
+        <p>年龄：18</p>
+
+        <!-- 双向绑定 -->
+        <input type="text" id="input_d" v-model="input_value">{{input_value}}
+    </div>
+
+</body>
+<script>
+    const app = document.querySelector("#app")
+
+    // 简配vm
+    const vm = {
+        el: app,
+        template: app.innerHTML,
+        input_value: "6",
+        name: "崔永杰",
+        age: 18
+    }
+
+    // 初始化渲染
+    render(vm.el, vm.template, vm)
+
+
+    // 监听对象
+    const listener = new Proxy(vm, {
+        set(target, key, value) {
+            target[key] = value
+
+            // 发生改动调用render函数
+            render(target.el, target.template, target)
+        }
+    })
+
+
+    // dom元素， 模板内容， 绑定对象    (渲染函数)
+    function render(dom, template, bandleObj) {
+        dom.innerHTML = template.replace(/{{\w+}}/g, str => {
+            str = str.substring(2, str.length - 2)
+
+            return bandleObj[str]
+        })
+
+        // 双向绑定检索
+        Array.from(dom.querySelectorAll("input")).filter(item => item.getAttribute("v-model")).forEach(item => {
+            let attr = item.getAttribute("v-model")
+            item.value = bandleObj[attr]
+
+            // BUG：输入完毕之后，input会失去焦点，无法完成 持续输入 操作
+            item.oninput = function () {
+                listener.input_value = this.value
+            }
+        })
+
+    }
+
+</script>
+
+</html>
