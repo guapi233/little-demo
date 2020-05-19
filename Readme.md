@@ -19,3 +19,4 @@
 * dynamic-data     模拟vue动态数据双向绑定 
 * 404-dinosaur-games    chrome 404 page 中的小恐龙游戏自动化脚本
 * img-upload            koa实现文件上传
+* custom-Promise    手写Promise
