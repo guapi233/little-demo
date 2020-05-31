@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="box">0</div>
+</body>
+<script>
+
+  let count = 0, box = document.querySelector(".box")
+
+  // 时间戳版：先执行再等待指定时间，在鼠标停止操作后会立马停止执行
+  function throttle1(fn, wait) {
+
+    let now, previous = 0
+
+    return function () {
+      now = +new Date()
+
+      if (now - previous > wait) {
+        fn.apply(this, arguments)
+
+        previous = now
+      }
+    }
+  }
+
+
+  // 定时器版：先等待指定时间再执行，在鼠标停止操作后仍会额外执行一次
+  function throttle2(fn, wait) {
+    let timer;
+
+    return function () {
+      if (!timer) {
+        timer = setTimeout(() => {
+          fn.apply(this, arguments)
+
+          timer = null
+        }, wait)
+      }
+    }
+  }
+
+
+  // 定时器2版：先执行再等待指定时间，在鼠标停止操作后会立马停止执行
+  function throttle3(fn, wait) {
+    let timer;
+
+    return function () {
+      if (!timer) {
+        timer = setTimeout(() => {
+          timer = null
+        }, wait)
+
+        fn.apply(this, arguments)
+      }
+    }
+  }
+
+  // 最终版：先执行再等待指定时间，在鼠标停止操作后仍会额外执行一次
+  function throttle4(fn, wait) {
+
+    let timer, now, previous = 0, context, args
+
+    function later() {
+      fn.apply(context, args)
+      timer = null
+      previous = +new Date()
+    }
+
+    function throttled() {
+      now = +new Date()
+      context = this, args = arguments
+
+      let remaining = wait - (now - previous)
+      if (remaining <= 0 || remaining > wait) {
+
+        if (timer) {
+          clearTimeout(timer)
+          timer = null
+        }
+
+        fn.apply(context, args)
+        previous = now
+      } else if (!timer) {
+        timer = setTimeout(later, remaining);
+      }
+    }
+
+    throttled.cancel = function () {
+      clearTimeout(timer)
+      previous = 0
+      timer = null
+    }
+
+    return throttled
+  }
+
+  document.onmousemove = throttle4(function () {
+    box.innerHTML = ++count
+  }, 1000)
+
+</script>
+
+</html>

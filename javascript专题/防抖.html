@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="box">0</div>
+</body>
+<script>
+
+
+  /*
+    * fn 需要加工为防抖的函数
+    * wait 需要等待的时间
+    * immediate 是否让函数于等待时间之前执行（开启后会立马执行函数，然后再开始等一段指定的时间）
+  */
+  function debounce(fn, wait, immediate) {
+    let timer;
+
+    function debounced () {
+      if (timer) clearTimeout(timer)
+
+      if (immediate) {
+        let callNow = !timer
+
+        timer = setTimeout(() => {
+
+          timer = null
+        }, wait);
+
+        if (callNow) fn.apply(this, arguments)
+      } else {
+        timer = setTimeout(() => {
+          fn.apply(this, arguments)
+        }, wait);
+      }
+    }
+
+    debounced.cancel = function () {
+      clearTimeout(timer)
+      timer = null
+    }
+
+    return debounced
+  }
+
+  let count = 0, box = document.querySelector(".box")
+
+  let bouncedFn = debounce(function (event) {
+    box.innerHTML = ++count
+
+    console.log(this, event)
+  }, 1000, true)
+
+  document.onmousemove = bouncedFn
+
+  document.onclick = bouncedFn.cancel
+</script>
+
+</html>
